@@ -25,7 +25,6 @@ class User extends Authenticatable
         'lastname',
         'phone',
         'picture',
-        'wallet_address',
         '2FA',
         'description'
     ];
@@ -54,18 +53,8 @@ class User extends Authenticatable
         return $this->hasOne(ApiClient::class);
     }
 
-    public function purchases()
+    public function address_wallets()
     {
-        return $this->hasMany();
-    }
-
-    public function batches()
-    {
-        return $this->belongsToMany(Batch::class)->withPivot('quantity')->with('item');
-    }
-
-    public function fiame_orders()
-    {
-        return FiameOrder::where ('user_id',$this->id)->get();
+        return $this->hasMany(Address_wallet::class);
     }
 }
