@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\Address_wallet;
 use App\Models\User;
 use App\Models\VotingTopic;
 use Illuminate\Http\Request;
@@ -33,9 +34,9 @@ class NextepController extends Controller
             'picture' => $user->picture,
             'creation_date' => $user->created_at,
             'last_logged_date' => $user->last_login,
-            'wallet_address' => $user->wallet_address,
             'two_factor_auth' => $user->two_factor_auth,
             'description' => $user->description,
+            'address_wallets' => $user->address_wallets,
         ];
     }
 
@@ -87,10 +88,16 @@ class NextepController extends Controller
                 $user->email = $request->has('email') ? $request->input('email') : $user->email;
                 $user->firstname = $request->has('firstname') ? $request->input('firstname') : $user->firstname;
                 $user->lastname = $request->has('lastname') ? $request->input('lastname') : $user->lastname;
-                $user->wallet_address = $request->has('wallet_address') ? $request->input('wallet_address') : $user->wallet_address;
+                //$user->wallet_address = $request->has('wallet_address') ? $request->input('wallet_address') : $user->wallet_address;
                 $user->two_factor_auth = $request->has('two_factor_auth') ? $request->input('two_factor_auth') : $user->two_factor_auth;
                 $user->description = $request->has('description') ? $request->input('description') : $user->description;
                 $user->save();
+
+                Address_wallet::create([
+                    'address' => $request->input('wallet_address'),
+                    'address_type' => 0,
+                    'user_id' => $user->id,
+                ]);
                 return response("Ok",200);
             } catch (Exception $e) {
                 return response('bad request',400);
