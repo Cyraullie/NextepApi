@@ -24,25 +24,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Run for cause endpoints
-Route::middleware('auth:api')->get('/rfc/me', [RunForCauseController::class,'showCurrentUser']);
-Route::middleware('auth:api')->patch('/rfc/profile',[RunForCauseController::class, 'update']);
-Route::middleware('auth:api')->post('/rfc/location',[RunForCauseController::class, 'store']);
-Route::middleware('auth:api')->delete('/rfc/location',[RunForCauseController::class, 'destroy']);
-Route::post('/rfc/mytoken',[RunForCauseController::class,'mytoken']);
-
 // Nextep endpoints
-Route::middleware('auth:api')->get('/nxp/profile', [NextepController::class, 'profile']);
-Route::middleware('auth:api')->patch('/nxp/profile',[NextepController::class, 'update']);
-Route::post('/nxp/mytoken',[NextepController::class,'mytoken']);
-Route::middleware('auth:api')->post('/nxp/profile/photo',[NextepController::class,'uploadPhoto']);
-Route::middleware('auth:api')->delete('/nxp/profile/wallet',[NextepController::class,'deleteWallet']);
-Route::middleware('auth:api')->get('/nxp/voting_topics', [NextepController::class, 'votingTopics']);
+Route::post('/mytoken',[NextepController::class,'mytoken']);
 
-// Fiame
-Route::post('/fiame/mytoken',[FiameController::class,'mytoken']);
-Route::middleware('auth:api')->get('/fiame/me', [FiameController::class, 'profile']);
-Route::middleware('auth:api')->get('/fiame/mypurchases',[FiameController::class,'mypurchases']);
-Route::middleware('auth:api')->get('/fiame/products',[FiameController::class,'products']);
-Route::middleware('auth:api')->get('/fiame/users', [FiameController::class,'users']);
-Route::middleware('auth:api')->post('/fiame/purchase', [FiameController::class,'purchase']);
+Route::middleware('auth:api')->get('/profile', [NextepController::class, 'profile']);
+Route::middleware('auth:api')->patch('/profile',[NextepController::class, 'update']);
+
+Route::middleware('auth:api')->post('/profile/photo',[NextepController::class,'uploadPhoto']);
+Route::middleware('auth:api')->delete('/profile/wallet',[NextepController::class,'deleteWallet']);
+
+Route::middleware('auth:api')->get('/voting_topics', [NextepController::class, 'votingTopics']);
+

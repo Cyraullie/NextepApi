@@ -22,6 +22,12 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('picture');
+            $table->boolean('2FA')->default(false);
+            $table->string('description')->nullable();
+            $table->timestamp('last_login')->nullable();
         });
     }
 

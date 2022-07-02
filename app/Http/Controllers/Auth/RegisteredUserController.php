@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
             'firstname' => $fname,
             'lastname' => $lname,
             'phone' => '07'.rand(70000000, 99999999),
-            'picture' => 'g'.(rand(1,8)).'.png',
+            'picture' => 'nextep.png',
             'password' => Hash::make($request->password),
         ]);
 

@@ -29,14 +29,6 @@ class DatabaseSeeder extends Seeder
             $ac->user()->associate($user);
             $ac->save();
         }
-        $items = Item::factory(10)->create(['user_id' => function() use ($users) {return $users->random()->id;}]);
-        $gatherings = Gathering::factory(10)->create(['user_id' => function() use ($users) {return $users->random()->id;}]);
-        $batches = Batch::factory(10)->create(['gathering_id' => function() use ($gatherings) {return $gatherings->random()->id;}, 'item_id' => function() use ($items) {return $items->random()->id;}]);
-        for ($i=0; $i < 30; $i++) {
-            $batch = Batch::all()->random();
-            $user = User::all()->random();
-            $user->batches()->attach($batch, ['quantity' => rand(1,10)]);
-        }
         $topics = [
             "Voulez-vous plus de crème dans les millefeuilles ?",
             "Acceptez-vous une augmentation de vos dividendes de 60% par année ?",
