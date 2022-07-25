@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Address_wallet::class);
     }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
 }

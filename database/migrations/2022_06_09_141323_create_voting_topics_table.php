@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->text('subject');
+            $table->boolean('enable');
         });
     }
 

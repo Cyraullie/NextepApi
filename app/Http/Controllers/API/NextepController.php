@@ -37,6 +37,7 @@ class NextepController extends Controller
             'two_factor_auth' => $user->two_factor_auth,
             'description' => $user->description,
             'address_wallets' => $user->address_wallets,
+            'votes' => $user->votes,
         ];
     }
 
@@ -146,6 +147,6 @@ class NextepController extends Controller
 
     public function votingTopics()
     {
-        return VotingTopic::all();
+        return VotingTopic::all()->where("enable", "=", 1);
     }
 }

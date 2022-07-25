@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('topic_id');
             $table->foreign('topic_id')->references('id')->on('voting_topics');
-            $table->integer('vote');
+            $table->boolean('isDownVote');
         });
     }
 
