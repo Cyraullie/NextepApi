@@ -31,7 +31,7 @@ Route::middleware('auth:api')->get('/profile', [NextepController::class, 'profil
 Route::middleware('auth:api')->patch('/profile',[NextepController::class, 'update']);
 
 Route::middleware('auth:api')->post('/profile/photo',[NextepController::class,'uploadPhoto']);
-Route::middleware('auth:api')->delete('/profile/wallet',[NextepController::class,'deleteWallet']);
+Route::middleware('auth:api')->delete('/profile/wallet/{id}',[NextepController::class,'deleteWallet']);
 
 Route::middleware('auth:api')->get('/voting_topics', [NextepController::class, 'votingTopics']);
 

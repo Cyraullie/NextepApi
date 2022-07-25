@@ -10,6 +10,7 @@ use App\Models\VotingTopic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use mysql_xdevapi\Exception;
+use phpDocumentor\Reflection\Types\Integer;
 
 class NextepController extends Controller
 {
@@ -133,13 +134,11 @@ class NextepController extends Controller
     }
 
 
-    public function deleteWallet(Request $request)
+    public function deleteWallet(Request $request, $id)
     {
         try {
-            $user = User::find(Auth::user()->user_id);
-            $user->wallet_address = null;
-            $user->save();
-            return response('Ok',200);
+            Address_wallet::find($id)->delete();
+            return response( "Ok",200);
         } catch (\Exception $e) {
             return response('Bad request:' . $e->getMessage(), 400);
         }
