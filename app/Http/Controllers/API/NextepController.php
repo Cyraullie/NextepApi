@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\VotingTopic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use mysql_xdevapi\Exception;
 use phpDocumentor\Reflection\Types\Integer;
 
@@ -133,7 +135,6 @@ class NextepController extends Controller
         }
     }
 
-
     public function deleteWallet(Request $request, $id)
     {
         try {
@@ -143,6 +144,41 @@ class NextepController extends Controller
             return response('Bad request:' . $e->getMessage(), 400);
         }
     }
+
+    public function changePassword(Request $request)
+    {
+        if ($request->input('_method') == 'PATCH') {
+            try {
+                $user = User::find(Auth::user()->user_id);
+                $old_password = $request->input("old_password");
+                $new_password = $request->input("new_password");
+                $new_ConfirmPassword = $request->input("new_ConfirmPassword");
+
+                if(Hash::check($old_password, $user->password)){
+                    if($new_password == $new_ConfirmPassword){
+                        if(strlen($new_password) >= 8){
+                            if(preg_match('/[A-Z]/', $new_password) && preg_match('/[a-z]/', $new_password) && preg_match('/[0-9]/', $new_password)){
+                                $user->password = Hash::make($request->input("new_password"));
+                                $user->save();
+                                return response( "Ok",200);
+                            }
+                            return response('Bad request: bad password schema', 404);
+                        }
+                        return response('Bad request: not enough character', 403);
+                    }
+                    return response('Bad request: bad confirm password', 402);
+                }
+                return response('Bad request: bad old password', 401);
+            } catch (\Exception $e) {
+                return response('Bad request:' . $e->getMessage(), 400);
+            }
+        } else {
+            return response('Only PATCH method allowed', 405);
+        }
+    }
+
+
+
 
     public function votingTopics()
     {
