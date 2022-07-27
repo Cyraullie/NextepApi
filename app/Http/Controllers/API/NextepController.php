@@ -156,15 +156,18 @@ class NextepController extends Controller
 
                 if(Hash::check($old_password, $user->password)){
                     if($new_password == $new_ConfirmPassword){
-                        if(strlen($new_password) >= 8){
-                            if(preg_match('/[A-Z]/', $new_password) && preg_match('/[a-z]/', $new_password) && preg_match('/[0-9]/', $new_password)){
-                                $user->password = Hash::make($request->input("new_password"));
-                                $user->save();
-                                return response( "Ok",200);
+                        if($old_password != $new_password) {
+                            if (strlen($new_password) >= 8) {
+                                if (preg_match('/[A-Z]/', $new_password) && preg_match('/[a-z]/', $new_password) && preg_match('/[0-9]/', $new_password)) {
+                                    $user->password = Hash::make($request->input("new_password"));
+                                    $user->save();
+                                    return response("Ok", 200);
+                                }
+                                return response('Bad request: bad password schema', 404);
                             }
-                            return response('Bad request: bad password schema', 404);
+                            return response('Bad request: not enough character', 403);
                         }
-                        return response('Bad request: not enough character', 403);
+                        return response('Bad request: same password', 405);
                     }
                     return response('Bad request: bad confirm password', 402);
                 }
