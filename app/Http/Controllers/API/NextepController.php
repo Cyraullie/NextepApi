@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Address_wallet;
 use App\Models\User;
+use App\Models\Vote;
 use App\Models\VotingTopic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -182,9 +183,31 @@ class NextepController extends Controller
 
 
 
-
+    //voting area
     public function votingTopics()
     {
         return VotingTopic::all()->where("enable", "=", 1);
+    }
+
+    public function vote(Request $request, $id)
+    {
+        try {
+            $topic = VotingTopic::find($id);
+            $user = User::find(Auth::user()->user_id);
+
+            $vote = new Vote();
+            $vote->user_id = $user->id;
+            $vote->topic_id = $topic->id;
+            if($request->input("vote") == 0){
+                $vote->isDownVote = true;
+            } elseif ($request->input("vote") == 1) {
+                $vote->isDownVote = false;
+            }
+            $vote->save();
+
+            return response("Ok", 200);
+        } catch (\Exception $e) {
+            return response('Bad request:' . $e->getMessage(), 400);
+        }
     }
 }
