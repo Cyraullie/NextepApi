@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use mysql_xdevapi\Exception;
 use phpDocumentor\Reflection\Types\Integer;
+use function Symfony\Component\String\length;
 
 class NextepController extends Controller
 {
@@ -186,7 +187,22 @@ class NextepController extends Controller
     //voting area
     public function votingTopics()
     {
-        return VotingTopic::all()->where("enable", "=", 1);
+        $topics = VotingTopic::all()->where("enable", "=", 1);
+
+        $topics_Array = [];
+
+        foreach ($topics as $topic){
+            array_push($topics_Array, [
+                'id' => $topic->id,
+                'creation_date' => $topic->created_at,
+                'subject' => $topic->subject,
+                'description' => $topic->description,
+                'vote' => Vote::all()->where("user_id", "=", Auth::user()->user_id)->where("topic_id", "=", $topic->id),
+            ]);
+        }
+
+
+        return $topics_Array;
     }
 
     public function vote(Request $request, $id)
