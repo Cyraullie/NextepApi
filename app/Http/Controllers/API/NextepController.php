@@ -198,6 +198,8 @@ class NextepController extends Controller
                 'subject' => $topic->subject,
                 'description' => $topic->description,
                 'vote' => Vote::all()->where("user_id", "=", Auth::user()->user_id)->where("topic_id", "=", $topic->id),
+                'up_vote' => count(Vote::all()->where("topic_id", "=", $topic->id)->where("isDownVote", "=", 0)),
+                'down_vote' => count(Vote::all()->where("topic_id", "=", $topic->id)->where("isDownVote", "=", 1)),
             ]);
         }
 
