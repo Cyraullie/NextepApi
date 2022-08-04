@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasOne(ApiClient::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function address_wallets()
     {
         return $this->hasMany(Address_wallet::class);

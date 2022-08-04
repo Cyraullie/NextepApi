@@ -29,7 +29,7 @@ class NextepController extends Controller
 
     public function role(){
         $user = User::find(Auth::user()->user_id);
-        return $user->role_id;
+        return $user->role;
     }
 
     public function profile()
@@ -210,6 +210,27 @@ class NextepController extends Controller
 
 
         return $topics_Array;
+    }
+
+    public function topic(Request $request)
+    {
+        try {
+            //return $request->input('subject');
+            $user = User::find(Auth::user()->user_id);
+            if($user->role->slug == "ADM"){
+
+                $topic = new VotingTopic();
+                $topic->subject = $request->input('subject');
+                $topic->description = $request->input('description');
+                $topic->enable = 1;
+                $topic->save();
+
+                return response("Ok", 200);
+            }
+            return response('Bad request: no permission', 400);
+        } catch (\Exception $e) {
+            return response('Bad request:' . $e->getMessage(), 400);
+        }
     }
 
     public function vote(Request $request, $id)

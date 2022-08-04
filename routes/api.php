@@ -37,4 +37,6 @@ Route::middleware('auth:api')->patch('/profile/password',[NextepController::clas
 
 Route::middleware('auth:api')->get('/voting_topics', [NextepController::class, 'votingTopics']);
 Route::middleware('auth:api')->post('/vote/{id}', [NextepController::class, 'vote']);
+Route::middleware('auth:api')->post('/vote', [NextepController::class, 'topic']);
+
 
