@@ -54,6 +54,7 @@ class RegisteredUserController extends Controller
             'phone' => '07'.rand(70000000, 99999999),
             'picture' => 'nextep.png',
             'password' => Hash::make($request->password),
+            'role_id' => 1,
         ]);
 
         $api = new ApiClient();

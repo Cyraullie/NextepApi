@@ -28,6 +28,8 @@ return new class extends Migration
             $table->boolean('2FA')->default(false);
             $table->string('description')->nullable();
             $table->timestamp('last_login')->nullable();
+            $table->unsignedBigInteger('role_id')->default(1);
+            $table->foreign('role_id')->references('id')->on('roles');
         });
     }
 

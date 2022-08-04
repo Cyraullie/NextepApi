@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Nextep endpoints
 Route::post('/mytoken',[NextepController::class,'mytoken']);
+Route::middleware('auth:api')->get('/role', [NextepController::class, 'role']);
 
 Route::middleware('auth:api')->get('/profile', [NextepController::class, 'profile']);
 Route::middleware('auth:api')->patch('/profile',[NextepController::class, 'update']);
