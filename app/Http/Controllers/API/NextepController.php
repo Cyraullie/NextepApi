@@ -27,6 +27,11 @@ class NextepController extends Controller
         }
     }
 
+    public function role(){
+        $user = User::find(Auth::user()->user_id);
+        return $user->role_id;
+    }
+
     public function profile()
     {
         $user = User::findOrFail(Auth::user()->user_id);
