@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\API\FiameController;
+use App\Http\Controllers\API\VoteController;
 use App\Http\Controllers\API\NextepController;
-use App\Http\Controllers\API\RunForCauseController;
+use App\Http\Controllers\API\ProfileController;
+
 use App\Models\User;
-use App\Http\Controllers\API\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,17 +26,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Nextep endpoints
 Route::post('/mytoken',[NextepController::class,'mytoken']);
-Route::middleware('auth:api')->get('/role', [NextepController::class, 'role']);
+Route::middleware('auth:api')->get('/role', [ProfileController::class, 'role']);
 
-Route::middleware('auth:api')->get('/profile', [NextepController::class, 'profile']);
-Route::middleware('auth:api')->patch('/profile',[NextepController::class, 'update']);
+Route::middleware('auth:api')->get('/profile', [ProfileController::class, 'profile']);
+Route::middleware('auth:api')->patch('/profile',[ProfileController::class, 'update']);
+Route::middleware('auth:api')->post('/profile/photo',[ProfileController::class,'uploadPhoto']);
+Route::middleware('auth:api')->delete('/profile/wallet/{id}',[ProfileController::class,'deleteWallet']);
+Route::middleware('auth:api')->patch('/profile/password',[ProfileController::class,'changePassword']);
 
-Route::middleware('auth:api')->post('/profile/photo',[NextepController::class,'uploadPhoto']);
-Route::middleware('auth:api')->delete('/profile/wallet/{id}',[NextepController::class,'deleteWallet']);
-Route::middleware('auth:api')->patch('/profile/password',[NextepController::class,'changePassword']);
-
-Route::middleware('auth:api')->get('/voting_topics', [NextepController::class, 'votingTopics']);
-Route::middleware('auth:api')->post('/vote/{id}', [NextepController::class, 'vote']);
-Route::middleware('auth:api')->post('/vote', [NextepController::class, 'topic']);
+Route::middleware('auth:api')->get('/voting_topics', [VoteController::class, 'votingTopics']);
+Route::middleware('auth:api')->post('/vote/{id}', [VoteController::class, 'vote']);
+Route::middleware('auth:api')->post('/vote', [VoteController::class, 'store']);
 
 
