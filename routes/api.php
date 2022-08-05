@@ -37,5 +37,6 @@ Route::middleware('auth:api')->patch('/profile/password',[ProfileController::cla
 Route::middleware('auth:api')->get('/voting_topics', [VoteController::class, 'votingTopics']);
 Route::middleware('auth:api')->post('/vote/{id}', [VoteController::class, 'vote']);
 Route::middleware('auth:api')->post('/vote', [VoteController::class, 'store']);
+Route::middleware('auth:api')->post('/topic/{id}', [VoteController::class, 'disableTopic']);
 
 

@@ -74,4 +74,22 @@ class VoteController extends Controller
             return response('Bad request:' . $e->getMessage(), 400);
         }
     }
+
+    public function disableTopic($id){
+        try{
+            $user = User::find(Auth::user()->user_id);
+            if($user->role->slug == "ADM") {
+                $topic = VotingTopic::find($id);
+                if ($topic->enable) {
+                    $topic->enable = 0;
+                    $topic->save();
+                    return response("Ok", 200);
+                }
+                return response("Bad request: topic already disable", 400);
+            }
+            return response("Bad request: no permission", 400);
+        } catch (\Exception $e) {
+            return response('Bad request:' . $e->getMessage(), 400);
+        }
+    }
 }
