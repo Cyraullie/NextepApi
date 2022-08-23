@@ -25,9 +25,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Nextep endpoints
-Route::post('/mytoken',[NextepController::class,'mytoken']);
+Route::post('/mytoken', [NextepController::class,'mytoken']);
 Route::post("/nxp_register", [NextepController::class, "store"]);
+Route::middleware('auth:api')->get("/2fa", [NextepController::class, "tfa"]);
+Route::post("/2fa", [NextepController::class, "tfa_check"]);
+
+
 Route::middleware('auth:api')->get('/role', [ProfileController::class, 'role']);
+Route::middleware('auth:api')->get('/2faEnabled', [NextepController::class,'is2fa']);
+
 
 Route::middleware('auth:api')->get('/profile', [ProfileController::class, 'profile']);
 Route::middleware('auth:api')->patch('/profile',[ProfileController::class, 'update']);

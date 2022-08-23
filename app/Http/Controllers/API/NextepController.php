@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\Address_wallet;
@@ -17,7 +18,6 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use mysql_xdevapi\Exception;
 use phpDocumentor\Reflection\Types\Integer;
 use function Symfony\Component\String\length;
 
@@ -31,6 +31,48 @@ class NextepController extends Controller
             return response('bad credentials', 401);
         }
     }
+
+    public function is2fa(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->user_id);
+        return $user->two_factor_auth;
+    }
+
+    public function tfa(){
+        $user = User::findOrFail(Auth::user()->user_id);
+
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->Mailer = "smtp";
+
+        $mail->SMTPDebug  = 1;
+        $mail->SMTPAuth   = TRUE;
+        $mail->SMTPSecure = "tls";
+        $mail->Port       = 587;
+        $mail->Host       = "smtp.gmail.com";
+        $mail->Username   = env("MAIL_USERNAME");
+        $mail->Password   = env("MAIL_PASSWORD");
+        $mail->IsHTML(true);
+        $mail->AddAddress($user->email, "recipient-name");
+
+        $code = rand(000000, 999999);
+
+        $mail->Subject = "Nextep's 2Fa Code";
+        $content = "bonjour " . $user->email . "<br><br>Voici votre code à usage unique : <b>" . $code . "</b><br><br> Si vous n’avez demandé aucun code, vous pouvez ignorer cet e-mail. Un autre utilisateur a peut-être indiqué votre adresse e-mail par erreur.<br><br>Merci,<br>L’équipe Nextep";
+
+        $mail->MsgHTML($content);
+        $mail->send();
+
+        return $code;
+    }
+
+    public function tfa_check(Request $request){
+        if($request->input("mail_code") == $request->input("code")){
+            return response('correct', 200);
+        }
+        return response('bad code', 400);
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -71,6 +113,9 @@ class NextepController extends Controller
                 'password' => Hash::make($request->password),
                 'role_id' => 1,
             ]);
+
+            $user->two_factor_auth = $request->tfa;
+            $user->save();
 
             $api = new ApiClient();
             $api->api_token = Str::random(60);
