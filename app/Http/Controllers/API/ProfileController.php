@@ -53,15 +53,18 @@ class ProfileController extends Controller
                 $user->firstname = $request->has('firstname') ? $request->input('firstname') : $user->firstname;
                 $user->lastname = $request->has('lastname') ? $request->input('lastname') : $user->lastname;
                 //$user->wallet_address = $request->has('wallet_address') ? $request->input('wallet_address') : $user->wallet_address;
-                $user->two_factor_auth = $request->has('two_factor_auth') ? $request->input('two_factor_auth') : $user->two_factor_auth;
+                $user->two_factor_auth = $request->has('tfa') ? $request->input('tfa') : $user->two_factor_auth;
                 $user->description = $request->has('description') ? $request->input('description') : $user->description;
                 $user->save();
 
-                Address_wallet::create([
-                    'address' => $request->input('wallet_address'),
-                    'address_type' => 0,
-                    'user_id' => $user->id,
-                ]);
+                if($request->input('wallet_address') != null){
+                    Address_wallet::create([
+                        'address' => $request->input('wallet_address'),
+                        'address_type' => 0,
+                        'user_id' => $user->id,
+                    ]);
+                }
+
                 return response("Ok",200);
             } catch (Exception $e) {
                 return response('bad request',400);
